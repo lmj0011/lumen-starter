@@ -15,4 +15,15 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('new-user', ['uses' => 'UsersController@addNewUser', 'as' => 'new.user']);
+
+$router->group(['prefix' => 'api/v1'], function($router)
+{
+  $router->group(['prefix' => 'user'], function($router)
+  {
+    $router->get('/', ['uses' => 'UsersController@index', 'as' => 'index.user']);
+    $router->get('/{id}', ['uses' => 'UsersController@show', 'as' => 'show.user']);
+  	$router->post('/', ['uses' => 'UsersController@store', 'as' => 'store.user']);
+  	$router->put('/{id}', ['uses' => 'UsersController@update', 'as' => 'update.user']);
+  	$router->delete('/{id}', ['uses' => 'UsersController@destroy', 'as' => 'destroy.user']);
+  });
+});

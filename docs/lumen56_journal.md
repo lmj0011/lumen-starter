@@ -121,18 +121,129 @@ I started up the server `php -S localhost:8000 -t public`, went to `localhost:80
 {"username":"dankEngine817","email":"juM9W@gmail.com","updated_at":"2018-03-16 22:42:43","created_at":"2018-03-16 22:42:43","id":1}
 ```
 
-I checked the DB and the model was saved.
+I checked the Database, and the model was saved.
 
 This concluded testing my Eloquent ORM setup.
 
+<!-- reference commit 7b4ab9f96423e9f5b49fca2267e2d2e6c516eda0 here -->
+
+
+# Refining and Adding routes to the UsersController
+
+Here I plan to add more RESTful routes for the `UsersController`
+
+In the `UsersController`, I added these Restful methods.
+
+```php
+public function index(Request $request): JsonResponse
+{
+  $users  = User::all();
+
+  return response()->json($users);
+}
+
+public function show(Request $request, $id): JsonResponse
+{
+  $user = User::find($id);
+
+  return response()->json($user);
+}
+
+public function store(Request $request): JsonResponse
+{
+ $user = new User;
+ $user->username = $request->input('username');
+ $user->email = $request->input('email');
+ $user->password = $request->input('password');
+ $user->save();
+
+ return  response()->json($user);
+}
+
+public function update(Request $request, $id): JsonResponse
+{
+ $user = User::find($id);
+
+ if ($request->input('username')) {
+   $user->username = $request->input('username');
+ }
+
+ if ($request->input('email')) {
+   $user->email = $request->input('email');
+ }
+
+ $user->save();
+
+ return response()->json($user);
+}
+
+public function destroy(Request $request, $id): JsonResponse
+{
+ $user = User::find($id);
+
+ $user->delete();
+
+ return response()->json('User:' . $user->username . ' Removed.');
+}
+```
+
+I created an Interface named `RestfulModelInterface`
+that `UsersController` implements.
+
+```php
+interface RestfulModelInterface {
+
+    // HTTP VERB GET
+    public function index(Request $request): JsonResponse;
+
+    // HTTP VERB GET
+    public function show(Request $request, $id): JsonResponse;
+
+    // HTTP VERB PUT
+    public function update(Request $request, $id): JsonResponse;
+
+    // HTTP VERB POST
+    public function store(Request $request): JsonResponse;
+
+    // HTTP VERB DELETE
+    public function destroy(Request $request, $id): JsonResponse;
+}
+```
+
+The `RestfulModelInterface` Interface should come handy for future Controllers.
+
+
+
+These are the routes that supplement the `UsersController` in `routes/web.php`
+
+```php
+$router->group(['prefix' => 'api/v1'], function($router)
+{
+  $router->group(['prefix' => 'user'], function($router)
+  {
+    $router->get('/', ['uses' => 'UsersController@index', 'as' => 'index.user']);
+    $router->get('/{id}', ['uses' => 'UsersController@show', 'as' => 'show.user']);
+  	$router->post('/', ['uses' => 'UsersController@store', 'as' => 'store.user']);
+  	$router->put('/{id}', ['uses' => 'UsersController@update', 'as' => 'update.user']);
+  	$router->delete('/{id}', ['uses' => 'UsersController@destroy', 'as' => 'destroy.user']);
+  });
+});
+```
+
+
+You can test these routes using the curl commands documented in `docs/route_testing.md`
+
 
 <!--  
-
-# Refining and Adding more routes for the User model
-
-Here I plan to add more RESTful routes for User
+ref commit:
 
 ref: https://www.cloudways.com/blog/creating-rest-api-with-lumen/
+-->
+
+
+<!-- # Test Writing
+
+Here I will write api tests to test the UserController routes.
 -->
 
 
