@@ -102,7 +102,11 @@ I then added a new Controller named `UsersController`
 
 in `app/Http/Controllers/UsersController.php`, I added this method:
 
-```
+```php
+<?php
+
+// [...]
+
 public function addNewUser()
 {
     $user = new User;
@@ -135,6 +139,10 @@ Here I plan to add more RESTful routes for the `UsersController`
 In the `UsersController`, I added these Restful methods.
 
 ```php
+<?php
+
+// [...]
+
 public function index(Request $request): JsonResponse
 {
   $users  = User::all();
@@ -191,6 +199,10 @@ I created an Interface named `RestfulModelInterface`
 that `UsersController` implements.
 
 ```php
+<?php
+
+// [...]
+
 interface RestfulModelInterface {
 
     // HTTP VERB GET
@@ -217,6 +229,10 @@ The `RestfulModelInterface` Interface should come handy for future Controllers.
 These are the routes that supplement the `UsersController` in `routes/web.php`
 
 ```php
+<?php
+
+// [...]
+
 $router->group(['prefix' => 'api/v1'], function($router)
 {
   $router->group(['prefix' => 'user'], function($router)
@@ -235,22 +251,169 @@ You can test these routes using the curl commands documented in `docs/route_test
 
 
 <!--  
-ref commit:
+ref commit: 115836e1790207e63d640bd36e3b312d0886973a
 
 ref: https://www.cloudways.com/blog/creating-rest-api-with-lumen/
 -->
 
 
-<!-- # Test Writing
+# Test Writing
 
-Here I will write api tests to test the UserController routes.
--->
+Here I will write tests for the current API routes.
+These will be Integration Tests.
+
+
+In the `tests/` directory, I created a file named `UsersApiTest.php` and wrote tests functions,
+following the documentation here https://lumen.laravel.com/docs/5.6/testing#testing-json-apis
+
+
+`tests/UsersApiTest.php`
+
+```php
+<?php
+
+use Laravel\Lumen\Testing\DatabaseMigrations;
+use Laravel\Lumen\Testing\DatabaseTransactions;
+
+class UsersApiTest extends TestCase
+{
+
+   use DatabaseMigrations;
+
+   public function setUp(): void
+   {
+     parent::setUp();
+
+     $this->user1 = factory('App\Models\User')->make();
+     $this->user2 = factory('App\Models\User')->make();
+     $this->user3 = factory('App\Models\User')->make();
+   }
+
+    /**
+     * Test Route 'store.user'
+     * @return void
+     */
+    public function testStoreUser(): void
+    {
+        $this->post('api/v1/user', [
+          'username' => $this->user1->username,
+          'email' => $this->user1->email,
+          'password' => $this->user1->password,
+        ])->seeJson([
+          'username' => $this->user1->username,
+          'email' => $this->user1->email,
+       ]);
+    }
+
+    /**
+     * Test Route 'index.user'
+     * @return void
+     */
+    public function testGetUsers(): void
+    {
+        $this->post('api/v1/user', [
+          'username' => $this->user1->username,
+          'email' => $this->user1->email,
+          'password' => $this->user1->password,
+        ]);
+
+        $this->post('api/v1/user', [
+          'username' => $this->user2->username,
+          'email' => $this->user2->email,
+          'password' => $this->user2->password,
+        ]);
+
+        $this->post('api/v1/user', [
+          'username' => $this->user3->username,
+          'email' => $this->user3->email,
+          'password' => $this->user3->password,
+        ]);
+
+        /////////
+
+        $this->get('api/v1/user')->seeJson([
+          'username' => $this->user1->username,
+          'email' => $this->user1->email,
+       ]);
+
+       $this->get('api/v1/user')->seeJson([
+         'username' => $this->user2->username,
+         'email' => $this->user2->email,
+       ]);
+
+        $this->get('api/v1/user')->seeJson([
+          'username' => $this->user3->username,
+          'email' => $this->user3->email,
+       ]);
+    }
+
+    /**
+     * Test Route 'show.user'
+     * @return void
+     */
+    public function testGetUserById(): void
+    {
+      $this->post('api/v1/user', [
+        'username' => $this->user1->username,
+        'email' => $this->user1->email,
+        'password' => $this->user1->password,
+      ]);
+
+      $this->get('api/v1/user/1')->seeJson([
+        'username' => $this->user1->username,
+        'email' => $this->user1->email,
+     ]);
+    }
+
+    /**
+     * Test Route 'update.user'
+     * @return void
+     */
+    public function testUpdateUser(): void
+    {
+      $email = 'xxxtestxxx@gmail.com';
+
+      $this->post('api/v1/user', [
+        'username' => $this->user1->username,
+        'email' => $this->user1->email,
+        'password' => $this->user1->password,
+      ]);
+
+      $this->put('api/v1/user/1', ['email' => $email])->seeJson([
+        'email' => $email,
+      ]);
+    }
+
+    /**
+     * Test Route 'destroy.user'
+     * @return void
+     */
+    public function testDeleteUser(): void
+    {
+      $this->post('api/v1/user', [
+        'username' => $this->user1->username,
+        'email' => $this->user1->email,
+        'password' => $this->user1->password,
+      ]);
+
+      $this->delete('api/v1/user/1')->seeJson([
+        'User:' . $this->user1->username . ' Removed.'
+      ]);
+    }
+}
+```
+
+After doing this, I ran the tests by running `./vendor/bin/phpunit`
 
 
 
 <!-- # Adding authentication
 
-I will now attempt to set up authentication using `lumen-passport`
-https://github.com/dusterio/lumen-passport
+https://github.com/krisanalfa/lumen-jwt
+
+### activate AuthServiceProvider -->
+
+
+<!-- # Adding Authorization
 
 ### activate AuthServiceProvider -->
