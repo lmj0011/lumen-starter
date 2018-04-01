@@ -2,6 +2,31 @@
 
 - update the payload and base url as needed
 
+
+POST `/api/v1/auth/login`
+
+```
+curl -X POST http://localhost:8000/api/v1/auth/login -d '{"email":"tpain2105@gmails.com", "password":"password1"}' -H "Content-Type: application/json"
+```
+
+POST `/api/v1/auth/logout`
+
+```
+curl -X POST http://localhost:8000/api/v1/auth/logout -H "Content-Type: application/json" -H "Authorization: Bearer <your-token>"
+```
+
+POST `/api/v1/auth/me`
+
+```
+curl -X POST http://localhost:8000/api/v1/auth/me -H "Content-Type: application/json" -H "Authorization: Bearer <your-token>"
+```
+
+POST `/api/v1/auth/refresh`
+
+```
+curl -X POST http://localhost:8000/api/v1/auth/refresh -H "Content-Type: application/json" -H "Authorization: Bearer <your-token>"
+```
+
 GET `/api/v1/user`
 
 ```

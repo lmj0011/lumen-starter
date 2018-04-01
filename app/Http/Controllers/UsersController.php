@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
 use App\Interfaces\RestfulModelInterface;
 
 class UsersController extends Controller implements RestfulModelInterface
@@ -39,7 +40,7 @@ class UsersController extends Controller implements RestfulModelInterface
     $user = new User;
     $user->username = $request->input('username');
     $user->email = $request->input('email');
-    $user->password = $request->input('password');
+    $user->password = Hash::make($request->input('password'));
     $user->save();
 
     return  response()->json($user);

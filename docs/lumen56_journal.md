@@ -251,7 +251,7 @@ You can test these routes using the curl commands documented in `docs/route_test
 
 
 <!--  
-ref commit: 115836e1790207e63d640bd36e3b312d0886973a
+ref commit: 115836e1790207e63d640bd36e3b312d0886973a here
 
 ref: https://www.cloudways.com/blog/creating-rest-api-with-lumen/
 -->
@@ -266,6 +266,8 @@ These will be Integration Tests.
 In the `tests/` directory, I created a file named `UsersApiTest.php` and wrote tests functions,
 following the documentation here https://lumen.laravel.com/docs/5.6/testing#testing-json-apis
 
+
+### Create Tests
 
 `tests/UsersApiTest.php`
 
@@ -403,17 +405,30 @@ class UsersApiTest extends TestCase
 }
 ```
 
+### Run Tests
+
 After doing this, I ran the tests by running `./vendor/bin/phpunit`
 
+<!-- reference commit 15390efcbc73698a7e7a914cc39591d90d5ca5cb here -->
+
+# Adding Authentication
+
+- JSON Web Tokens will be the authentication method for this app;
+using https://github.com/tymondesigns/jwt-auth
+
+- After following the guide here http://jwt-auth.readthedocs.io/en/develop/lumen-installation/, I was able todo get
+JWT setup in my app.
+
+- the main thing that had to be changed that previously wasn't a problem, was to make sure I was hashing the Users
+password before saving it to the database. see: https://github.com/tymondesigns/jwt-auth/issues/1290#issuecomment-377153100
 
 
-<!-- # Adding authentication
-
-https://github.com/krisanalfa/lumen-jwt
-
-### activate AuthServiceProvider -->
 
 
-<!-- # Adding Authorization
+<!-- # Establishing Code Standards
 
-### activate AuthServiceProvider -->
+- Set Up IDE (PhpStorm)
+- Set Up Linter
+- Set up git hook for running linter and tests
+
+-->
