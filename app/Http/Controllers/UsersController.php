@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -21,13 +21,21 @@ class UsersController extends Controller implements RestfulModelInterface
     }
 
 
-   public function index(Request $request): JsonResponse
-   {
+  /**
+   * Return all Users.
+   *
+   */
+    public function index(Request $request): JsonResponse
+    {
      $users  = User::all();
 
      return response()->json($users);
-   }
+    }
 
+  /**
+   * Return a User by id.
+   *
+   */
    public function show(Request $request, $id): JsonResponse
    {
      $user = User::find($id);
@@ -35,6 +43,10 @@ class UsersController extends Controller implements RestfulModelInterface
      return response()->json($user);
    }
 
+/**
+ * Create a new User.
+ *
+ */
   public function store(Request $request): JsonResponse
   {
     $user = new User;
@@ -46,6 +58,10 @@ class UsersController extends Controller implements RestfulModelInterface
     return  response()->json($user);
   }
 
+/**
+ * Update a User by id.
+ *
+ */
   public function update(Request $request, $id): JsonResponse
   {
     $user = User::find($id);
@@ -63,6 +79,10 @@ class UsersController extends Controller implements RestfulModelInterface
     return response()->json($user);
   }
 
+/**
+ * Destroy a User by id.
+ *
+ */
   public function destroy(Request $request, $id): JsonResponse
   {
     $user = User::find($id);

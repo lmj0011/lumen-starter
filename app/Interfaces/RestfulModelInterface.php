@@ -7,18 +7,46 @@ use Illuminate\Http\JsonResponse;
 
 interface RestfulModelInterface {
 
-    // HTTP VERB GET
+    /**
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function index(Request $request): JsonResponse;
 
-    // HTTP VERB GET
+    /**
+     * @param Request $request
+     * @param mixed $id
+     *
+     * @return JsonResponse
+     */
     public function show(Request $request, $id): JsonResponse;
 
-    // HTTP VERB PUT
-    public function update(Request $request, $id): JsonResponse;
 
-    // HTTP VERB POST
+    /**
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function store(Request $request): JsonResponse;
 
-    // HTTP VERB DELETE
+    /**
+     *
+     * @param Request $request
+     * @param mixed $id
+     *
+     * @return JsonResponse
+     */
+    public function update(Request $request, $id): JsonResponse;
+
+    /**
+     *
+     * @param Request $request
+     * @param mixed $id
+     *
+     * @return JsonResponse
+     */
     public function destroy(Request $request, $id): JsonResponse;
 }

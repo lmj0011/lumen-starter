@@ -422,13 +422,28 @@ JWT setup in my app.
 - the main thing that had to be changed that previously wasn't a problem, was to make sure I was hashing the Users
 password before saving it to the database. see: https://github.com/tymondesigns/jwt-auth/issues/1290#issuecomment-377153100
 
+<!-- reference commit 9d315926096ef2594e5253ba91e4f33b5693d7a3 here -->
 
 
+# Adding App Documentation
+
+- set up API docs with Sami https://github.com/FriendsOfPHP/Sami
+
+```sh
+# generate api docs
+php sami.phar update sami_config.php
+
+# serve up docs for viewing in the web browser
+php -S localhost:8000 -t docs/api/app/
+```
+
+- set up API endpoints(Routes) docs with laravel-apidoc-generator https://github.com/mpociot/laravel-apidoc-generator
 
 <!-- # Establishing Code Standards
 
 - Set Up IDE (PhpStorm)
 - Set Up Linter
+- Set up hook/script for doc generation
 - Set up git hook for running linter and tests
 
 -->
