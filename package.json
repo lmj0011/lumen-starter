@@ -1,0 +1,13 @@
+{
+  "apidoc": {
+    "name": "My Lumen 5.6 API Endpoints",
+    "version": "0.0.0",
+    "description": "API Endpoint Documentation"
+  },
+  "scripts": {
+    "apidoc:build": "mkdir -p ./docs/api/routes && apidoc --input ./routes --output ./docs/api/routes"
+  },
+  "dependencies": {
+    "apidoc": "0.17.6"
+  }
+}

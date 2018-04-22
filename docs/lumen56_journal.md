@@ -256,161 +256,6 @@ ref commit: 115836e1790207e63d640bd36e3b312d0886973a here
 ref: https://www.cloudways.com/blog/creating-rest-api-with-lumen/
 -->
 
-
-# Test Writing
-
-Here I will write tests for the current API routes.
-These will be Integration Tests.
-
-
-In the `tests/` directory, I created a file named `UsersApiTest.php` and wrote tests functions,
-following the documentation here https://lumen.laravel.com/docs/5.6/testing#testing-json-apis
-
-
-### Create Tests
-
-`tests/UsersApiTest.php`
-
-```php
-<?php
-
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-
-class UsersApiTest extends TestCase
-{
-
-   use DatabaseMigrations;
-
-   public function setUp(): void
-   {
-     parent::setUp();
-
-     $this->user1 = factory('App\Models\User')->make();
-     $this->user2 = factory('App\Models\User')->make();
-     $this->user3 = factory('App\Models\User')->make();
-   }
-
-    /**
-     * Test Route 'store.user'
-     * @return void
-     */
-    public function testStoreUser(): void
-    {
-        $this->post('api/v1/user', [
-          'username' => $this->user1->username,
-          'email' => $this->user1->email,
-          'password' => $this->user1->password,
-        ])->seeJson([
-          'username' => $this->user1->username,
-          'email' => $this->user1->email,
-       ]);
-    }
-
-    /**
-     * Test Route 'index.user'
-     * @return void
-     */
-    public function testGetUsers(): void
-    {
-        $this->post('api/v1/user', [
-          'username' => $this->user1->username,
-          'email' => $this->user1->email,
-          'password' => $this->user1->password,
-        ]);
-
-        $this->post('api/v1/user', [
-          'username' => $this->user2->username,
-          'email' => $this->user2->email,
-          'password' => $this->user2->password,
-        ]);
-
-        $this->post('api/v1/user', [
-          'username' => $this->user3->username,
-          'email' => $this->user3->email,
-          'password' => $this->user3->password,
-        ]);
-
-        /////////
-
-        $this->get('api/v1/user')->seeJson([
-          'username' => $this->user1->username,
-          'email' => $this->user1->email,
-       ]);
-
-       $this->get('api/v1/user')->seeJson([
-         'username' => $this->user2->username,
-         'email' => $this->user2->email,
-       ]);
-
-        $this->get('api/v1/user')->seeJson([
-          'username' => $this->user3->username,
-          'email' => $this->user3->email,
-       ]);
-    }
-
-    /**
-     * Test Route 'show.user'
-     * @return void
-     */
-    public function testGetUserById(): void
-    {
-      $this->post('api/v1/user', [
-        'username' => $this->user1->username,
-        'email' => $this->user1->email,
-        'password' => $this->user1->password,
-      ]);
-
-      $this->get('api/v1/user/1')->seeJson([
-        'username' => $this->user1->username,
-        'email' => $this->user1->email,
-     ]);
-    }
-
-    /**
-     * Test Route 'update.user'
-     * @return void
-     */
-    public function testUpdateUser(): void
-    {
-      $email = 'xxxtestxxx@gmail.com';
-
-      $this->post('api/v1/user', [
-        'username' => $this->user1->username,
-        'email' => $this->user1->email,
-        'password' => $this->user1->password,
-      ]);
-
-      $this->put('api/v1/user/1', ['email' => $email])->seeJson([
-        'email' => $email,
-      ]);
-    }
-
-    /**
-     * Test Route 'destroy.user'
-     * @return void
-     */
-    public function testDeleteUser(): void
-    {
-      $this->post('api/v1/user', [
-        'username' => $this->user1->username,
-        'email' => $this->user1->email,
-        'password' => $this->user1->password,
-      ]);
-
-      $this->delete('api/v1/user/1')->seeJson([
-        'User:' . $this->user1->username . ' Removed.'
-      ]);
-    }
-}
-```
-
-### Run Tests
-
-After doing this, I ran the tests by running `./vendor/bin/phpunit`
-
-<!-- reference commit 15390efcbc73698a7e7a914cc39591d90d5ca5cb here -->
-
 # Adding Authentication
 
 - JSON Web Tokens will be the authentication method for this app;
@@ -424,26 +269,45 @@ password before saving it to the database. see: https://github.com/tymondesigns/
 
 <!-- reference commit 9d315926096ef2594e5253ba91e4f33b5693d7a3 here -->
 
+# Test Writing
+
+Here I will write tests for the current API routes.
+These will be Integration Tests.
+
+
+In the `tests/` directory, I created a file named `UsersApiTest.php` and wrote tests functions,
+following the documentation here https://lumen.laravel.com/docs/5.6/testing#testing-json-apis
+
+
+### Run Tests
+
+to run all tests `./vendor/bin/phpunit`
+
+to run only the api (integration) tests: `./vendor/bin/phpunit --group api`
+
+to run only the unit tests: `./vendor/bin/phpunit --group unit`
+
+<!-- reference commit 15390efcbc73698a7e7a914cc39591d90d5ca5cb here -->
+
 
 # Adding App Documentation
 
-- set up API docs with Sami https://github.com/FriendsOfPHP/Sami
+- I set up API docs with [Sami](https://github.com/FriendsOfPHP/Sami)
 
 ```sh
 # generate api docs
 php sami.phar update sami_config.php
 
 # serve up docs for viewing in the web browser
-php -S localhost:8000 -t docs/api/app/
+php -S localhost:8080 -t docs/api/app/
 ```
 
-- set up API endpoints(Routes) docs with laravel-apidoc-generator https://github.com/mpociot/laravel-apidoc-generator
+- I set up API endpoint docs with [apidoc.js](http://apidocjs.com/)
 
-<!-- # Establishing Code Standards
+```
+# generate api endpoint docs
+npm run apidoc:build
 
-- Set Up IDE (PhpStorm)
-- Set Up Linter
-- Set up hook/script for doc generation
-- Set up git hook for running linter and tests
-
--->
+# serve up docs for viewing in the web browser
+php -S localhost:8081 -t docs/api/routes/
+```

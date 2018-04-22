@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,5 +34,9 @@ class AuthServiceProvider extends ServiceProvider
                 return User::where('email', $request->input('email'))->first();
             }
         });
+
+        // Define policies
+        Gate::policy(\App\Models\User::class, \App\Policies\UserPolicy::class);
+
     }
 }

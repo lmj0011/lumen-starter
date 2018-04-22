@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -64,6 +66,10 @@ class UsersController extends Controller implements RestfulModelInterface
  */
   public function update(Request $request, $id): JsonResponse
   {
+    if(Gate::denies('update', User::class)){
+      return response()->json(['error' => 'Insufficient Permissions.'], 400);
+    }
+
     $user = User::find($id);
 
     if ($request->input('username')) {
@@ -85,10 +91,18 @@ class UsersController extends Controller implements RestfulModelInterface
  */
   public function destroy(Request $request, $id): JsonResponse
   {
+    if(Gate::denies('destroy', User::class)){
+      return response()->json(['error' => 'Insufficient Permissions.'], 400);
+    }
+
+    if(Auth::guard()->id() == $id){
+      return response()->json(['error' => 'The auth user cannot delete itself.'], 400);
+    }
+
     $user = User::find($id);
 
   	$user->delete();
 
-    return response()->json('User:' . $user->username . ' Removed.');
+    return response()->json([ 'message' => 'User:' . $user->username . ' Removed.']);
   }
 }

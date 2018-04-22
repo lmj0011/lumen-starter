@@ -33,6 +33,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
+     * tells whether this is the root User.
+     *
+     * @return bool
+     */
+    public function isRootUser()
+    {
+        return $this->id === 1;
+    }
+
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
