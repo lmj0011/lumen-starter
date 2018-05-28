@@ -44,7 +44,7 @@ class AuthController extends Controller
           $credentials = $request->only('email', 'password');
 
           if (! $token = Auth::guard()->attempt($credentials)) {
-              return response()->json(['error' => 'Unauthorized'], 401);
+              return response()->json(['error' => 'Bad credentials'], 401);
           }
         } catch (TokenExpiredException $e) {
             return response()->json(['token_expired'], $e->getStatusCode());
