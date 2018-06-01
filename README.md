@@ -1,18 +1,20 @@
-## Lumen API Starter
+# lumen-starter
+
+An api backend made with Lumen.
 
 - What's Included
 - Requirements
 - Installation
 - Testing
-- Route Documentation
+- API Documentation
 
 
 ### What's Included
 
 - Lumen 5.6
-- Authentication with JSON Web Tokens(JWT)
-- apidoc.js documentation for Routes
-- Sami documentation for API
+- Authentication with JSON Web Tokens (JWT)
+- apidoc.js documentation for the route endpoints
+- Sami documentation for the API
 - A ready to go Users Model/Controller setup
 
 ### Requirements
@@ -39,7 +41,7 @@ npm install
 - run the app
 
 ```sh
-cd myapp
+cd myapi
 
 php -S localhost:8000 -t public
 ```
@@ -60,7 +62,7 @@ php -S localhost:8000 -t public
 `./vendor/bin/phpunit --group api`
 
 
-### Route Documentation
+### API Documentation
 
 - There are 2 types of docs that can be generated right away.
 
